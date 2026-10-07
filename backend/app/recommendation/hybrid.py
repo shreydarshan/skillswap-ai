@@ -132,9 +132,13 @@ def get_hybrid_recommendations(
     collab_map = {str(c.candidate_id): c for c in collab_candidates}
 
     hybrid_results: List[HybridCandidateRecommendation] = []
+    seen_hybrid_ids = set()
 
     for cand in content_candidates:
         cand_id_str = str(cand.user_id)
+        if cand_id_str in seen_hybrid_ids:
+            continue
+        seen_hybrid_ids.add(cand_id_str)
         collab_entry = collab_map.get(cand_id_str)
 
         if collab_entry is not None:

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MapPin, Sparkles, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MapPin, Sparkles, ArrowRight, MessageSquare, Clock, Check } from 'lucide-react';
 import Card from '../common/Card';
 import Button from '../common/Button';
 import SkillTag from '../common/SkillTag';
@@ -10,13 +11,19 @@ import QuickProfileModal from './QuickProfileModal';
 import ProfileAvatar from './ProfileAvatar';
 import { authService } from '../../services/auth';
 import { getAvatarUrl } from '../../utils/avatar';
+import { useAuth } from '../../context/AuthContext';
 
 export default function RecommendedMatchCard({ candidate, onSwapSuccess = null }) {
+  const navigate = useNavigate();
+  const { getRelationshipWithUser, refreshSwaps } = useAuth();
   const [showWhyModal, setShowWhyModal] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   if (!candidate) return null;
+
+  const candidateId = candidate.candidate_id || candidate.user_id || candidate.id;
+  const relationship = getRelationshipWithUser ? getRelationshipWithUser(candidateId) : { status: 'NO_RELATIONSHIP' };
 
   const candidateName = candidate.candidate_name || candidate.name || candidate.full_name || 'Match';
   const roleText = candidate.role || (candidate.branch ? `${candidate.branch}${candidate.year ? ` • Yr ${candidate.year}` : ''}` : 'Student');
@@ -174,14 +181,35 @@ export default function RecommendedMatchCard({ candidate, onSwapSuccess = null }
             >
               View Profile
             </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setShowRequestModal(true)}
-              className="w-full text-xs font-semibold py-2"
-            >
-              Request Swap
-            </Button>
+            {relationship.isConnected ? (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={MessageSquare}
+                onClick={() => navigate('/app/chats', { state: { recipientId: candidateId, recipientUser: normalizedUser } })}
+                className="w-full text-xs font-semibold py-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                Open Chat
+              </Button>
+            ) : relationship.isPending ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled
+                className="w-full text-xs font-medium py-2 bg-amber-50 text-amber-700 border border-amber-200 cursor-not-allowed opacity-90"
+              >
+                Pending
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setShowRequestModal(true)}
+                className="w-full text-xs font-semibold py-2"
+              >
+                Request Swap
+              </Button>
+            )}
           </div>
         </div>
       </Card>
@@ -201,7 +229,10 @@ export default function RecommendedMatchCard({ candidate, onSwapSuccess = null }
         user={normalizedUser}
         isOpen={showRequestModal}
         onClose={() => setShowRequestModal(false)}
-        onSuccess={onSwapSuccess}
+        onSuccess={(u, off, req) => {
+          if (refreshSwaps) refreshSwaps();
+          if (onSwapSuccess) onSwapSuccess(u, off, req);
+        }}
       />
 
       <QuickProfileModal

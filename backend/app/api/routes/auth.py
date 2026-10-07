@@ -40,10 +40,19 @@ def register(user_in: UserRegister, db: Session = Depends(get_db)):
     db.add(new_user)
     db.flush()  # Generate new_user.id
 
+    # Determine test account status
+    is_test_account = (
+        bool(user_in.is_test)
+        or user_in.email.lower().endswith("@example.com")
+        or user_in.full_name.lower().startswith("test student")
+        or user_in.email.lower().startswith("test_")
+    )
+
     # Create associated student profile
     new_profile = Profile(
         user_id=new_user.id,
-        full_name=user_in.full_name
+        full_name=user_in.full_name,
+        is_test=is_test_account
     )
     db.add(new_profile)
     db.commit()

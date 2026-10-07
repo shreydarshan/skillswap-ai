@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { X, Send, Sparkles, Check } from 'lucide-react';
+import { X, Send, Sparkles, Check, AlertCircle } from 'lucide-react';
 import Button from '../common/Button';
 import ProfileAvatar from '../profile/ProfileAvatar';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/auth';
 
 export default function SwapRequestModal({ user, isOpen, onClose, onSuccess }) {
-  const { offeredSkills = [] } = useAuth();
+  const { user: currentUser, offeredSkills = [] } = useAuth();
   if (!isOpen || !user) return null;
 
   const defaultOffered = offeredSkills[0]?.skill_name || offeredSkills[0]?.skill?.name || 'General Mentorship';
@@ -15,29 +15,44 @@ export default function SwapRequestModal({ user, isOpen, onClose, onSuccess }) {
   const [message, setMessage] = useState(
     `Hi ${user.name}! I'd love to swap my ${offeredSkill} skills for your guidance in ${requestedSkill}. Let me know if you're free to connect!`
   );
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError(null);
+
     const targetId = user.id || user.user_id || user.candidate_id;
-    if (targetId) {
-      try {
-        await authService.sendSwapRequest({
-          receiverId: targetId,
-          skillOfferedName: offeredSkill,
-          skillRequestedName: requestedSkill,
-          message
-        });
-      } catch (err) {
-        console.warn('Swap request tracked with notice:', err);
-      }
+    if (!targetId) {
+      setError('Could not identify target student recipient.');
+      return;
     }
-    setTimeout(() => {
-      setSubmitted(false);
-      onClose();
-      if (onSuccess) onSuccess(user, offeredSkill, requestedSkill);
-    }, 1200);
+
+    if (currentUser?.id && targetId === currentUser.id) {
+      setError('You cannot send a skill swap request to yourself.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await authService.sendSwapRequest({
+        receiverId: targetId,
+        skillOfferedName: offeredSkill,
+        skillRequestedName: requestedSkill,
+        message
+      });
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        onClose();
+        if (onSuccess) onSuccess(user, offeredSkill, requestedSkill);
+      }, 1500);
+    } catch (err) {
+      setError(err.message || 'Failed to send swap request. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -78,6 +93,13 @@ export default function SwapRequestModal({ user, isOpen, onClose, onSuccess }) {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            {error && (
+              <div className="p-3 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl flex items-center gap-2 text-xs font-semibold animate-in fade-in">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+                <span>{error}</span>
+              </div>
+            )}
+
             {/* What you offer */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
@@ -139,11 +161,11 @@ export default function SwapRequestModal({ user, isOpen, onClose, onSuccess }) {
 
             {/* Footer Buttons */}
             <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
-              <Button variant="outline" size="md" onClick={onClose}>
+              <Button variant="outline" size="md" onClick={onClose} disabled={submitting}>
                 Cancel
               </Button>
-              <Button variant="primary" size="md" type="submit" icon={Send}>
-                Send Swap Request
+              <Button variant="primary" size="md" type="submit" icon={Send} disabled={submitting}>
+                {submitting ? 'Sending Request...' : 'Send Swap Request'}
               </Button>
             </div>
           </form>

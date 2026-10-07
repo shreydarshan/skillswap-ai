@@ -132,7 +132,12 @@ def get_students(
     profiles = db.scalars(query).all()
 
     candidates = []
+    seen_explore_ids = set()
     for prof in profiles:
+        if prof.user_id in seen_explore_ids:
+            continue
+        seen_explore_ids.add(prof.user_id)
+
         user = db.get(User, prof.user_id)
         if not user or not user.is_active:
             continue

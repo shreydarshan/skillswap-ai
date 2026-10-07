@@ -107,6 +107,20 @@ export const authService = {
     return await fetchApi('/messages/me');
   },
 
+  async sendMessage(receiverId, message) {
+    return await fetchApi('/messages', {
+      method: 'POST',
+      body: JSON.stringify({
+        receiver_id: receiverId,
+        message
+      })
+    });
+  },
+
+  async getConversationMessages(otherUserId) {
+    return await fetchApi(`/messages/conversations/${otherUserId}`);
+  },
+
   async getUnreadMessagesCount() {
     return await fetchApi('/messages/me/unread-count');
   },
@@ -164,6 +178,12 @@ export const authService = {
     });
   },
 
+  async declineSwapRequest(swapId) {
+    return await fetchApi(`/swap-requests/${swapId}/decline`, {
+      method: 'PUT'
+    });
+  },
+
   async completeSwapRequest(swapId) {
     return await fetchApi(`/swap-requests/${swapId}/complete`, {
       method: 'PUT'
@@ -172,5 +192,9 @@ export const authService = {
 
   async getMySwapRequests() {
     return await fetchApi('/swap-requests/me');
+  },
+
+  async getRelationshipWithUser(otherUserId) {
+    return await fetchApi(`/swap-requests/relationship/${otherUserId}`);
   }
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Star,
   MapPin,
@@ -9,7 +10,8 @@ import {
   Edit3,
   Check,
   Trash2,
-  AlertCircle
+  AlertCircle,
+  LogOut
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/auth';
@@ -21,7 +23,8 @@ import AvatarSelector from '../components/profile/AvatarSelector';
 import { getAvatarUrl } from '../utils/avatar';
 
 export default function ProfilePage() {
-  const { user, profile: authProfile, refreshProfile } = useAuth();
+  const navigate = useNavigate();
+  const { user, profile: authProfile, refreshProfile, logout } = useAuth();
 
   const [profileData, setProfileData] = useState({
     full_name: '',
@@ -183,7 +186,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="sm:self-end pb-1">
+            <div className="sm:self-end pb-1 flex items-center gap-2 flex-wrap">
               <Button
                 variant="outline"
                 size="md"
@@ -191,6 +194,18 @@ export default function ProfilePage() {
                 onClick={() => setIsEditingBio(!isEditingBio)}
               >
                 {isEditingBio ? 'Cancel' : 'Edit Profile'}
+              </Button>
+              <Button
+                variant="outline"
+                size="md"
+                icon={LogOut}
+                onClick={() => {
+                  logout();
+                  navigate('/login');
+                }}
+                className="text-slate-500 hover:text-rose-600 hover:bg-rose-50 border-slate-200"
+              >
+                Log Out
               </Button>
             </div>
           </div>

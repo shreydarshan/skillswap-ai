@@ -207,8 +207,13 @@ def get_candidate_recommendations(
     ).all()
 
     recommendations: List[CandidateRecommendation] = []
+    seen_candidate_ids = set()
 
     for prof in candidate_profiles:
+        if prof.user_id in seen_candidate_ids:
+            continue
+        seen_candidate_ids.add(prof.user_id)
+
         # Check active status of candidate user account
         candidate_user = db.get(User, prof.user_id)
         if not candidate_user or not candidate_user.is_active:

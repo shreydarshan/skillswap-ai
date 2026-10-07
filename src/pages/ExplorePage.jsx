@@ -67,7 +67,12 @@ export default function ExplorePage() {
     const sid = s.id || s.user_id;
     if (!sid) continue;
     if (sid === user?.id || s.email === user?.email) continue;
-    if (s.is_test || (s.email && s.email.includes('test_'))) continue;
+    if (
+      s.is_test ||
+      (s.email && (s.email.includes('test_') || s.email.endsWith('@example.com'))) ||
+      (s.name && s.name.toLowerCase().startsWith('test student')) ||
+      (s.full_name && s.full_name.toLowerCase().startsWith('test student'))
+    ) continue;
     if (seenIds.has(sid)) continue;
     seenIds.add(sid);
     candidatePool.push(s);

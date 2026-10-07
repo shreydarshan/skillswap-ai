@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MapPin, GraduationCap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MapPin, GraduationCap, MessageSquare, Clock, Check } from 'lucide-react';
 import Card from '../common/Card';
 import Button from '../common/Button';
 import SkillTag from '../common/SkillTag';
@@ -8,8 +9,11 @@ import QuickProfileModal from './QuickProfileModal';
 import ProfileAvatar from './ProfileAvatar';
 import { authService } from '../../services/auth';
 import { getAvatarUrl } from '../../utils/avatar';
+import { useAuth } from '../../context/AuthContext';
 
 export default function ExploreStudentCard({ student, onSwapSuccess = null }) {
+  const navigate = useNavigate();
+  const { getRelationshipWithUser, refreshSwaps } = useAuth();
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -26,16 +30,19 @@ export default function ExploreStudentCard({ student, onSwapSuccess = null }) {
     student.gender_preference
   );
 
+  const studentId = student.id || student.user_id || student.candidate_id;
+  const relationship = getRelationshipWithUser ? getRelationshipWithUser(studentId) : { status: 'NO_RELATIONSHIP' };
+
   const handleOpenProfile = () => {
     setShowProfileModal(true);
-    const targetId = student.id || student.user_id;
-    if (targetId) {
-      authService.recordInteraction(targetId, 'VIEW').catch(() => {});
+    if (studentId) {
+      authService.recordInteraction(studentId, 'VIEW').catch(() => {});
     }
   };
 
   const normalizedStudent = {
     ...student,
+    id: studentId,
     name: studentName,
     full_name: studentName,
     avatar: avatarUrl,
@@ -143,7 +150,7 @@ export default function ExploreStudentCard({ student, onSwapSuccess = null }) {
           </div>
         </div>
 
-        {/* Footer Actions — View Profile & Request Swap */}
+        {/* Footer Actions — View Profile & Request Swap / Connected / Pending */}
         <div className="pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 mt-auto">
           <Button
             variant="outline"
@@ -153,14 +160,35 @@ export default function ExploreStudentCard({ student, onSwapSuccess = null }) {
           >
             View Profile
           </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => setShowRequestModal(true)}
-            className="w-full text-xs font-semibold py-2"
-          >
-            Request Swap
-          </Button>
+          {relationship.isConnected ? (
+            <Button
+              variant="primary"
+              size="sm"
+              icon={MessageSquare}
+              onClick={() => navigate('/app/chats', { state: { recipientId: studentId, recipientUser: normalizedStudent } })}
+              className="w-full text-xs font-semibold py-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              Open Chat
+            </Button>
+          ) : relationship.isPending ? (
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled
+              className="w-full text-xs font-medium py-2 bg-amber-50 text-amber-700 border border-amber-200 cursor-not-allowed opacity-90"
+            >
+              Pending
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setShowRequestModal(true)}
+              className="w-full text-xs font-semibold py-2"
+            >
+              Request Swap
+            </Button>
+          )}
         </div>
       </Card>
 
@@ -169,7 +197,10 @@ export default function ExploreStudentCard({ student, onSwapSuccess = null }) {
         user={normalizedStudent}
         isOpen={showRequestModal}
         onClose={() => setShowRequestModal(false)}
-        onSuccess={onSwapSuccess}
+        onSuccess={(u, off, req) => {
+          if (refreshSwaps) refreshSwaps();
+          if (onSwapSuccess) onSwapSuccess(u, off, req);
+        }}
       />
 
       <QuickProfileModal

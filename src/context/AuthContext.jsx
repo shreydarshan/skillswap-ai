@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(authService.getCurrentUser());
   const [profile, setProfile] = useState(null);
   const [userSkills, setUserSkills] = useState([]);
+  const [mySwaps, setMySwaps] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchSkills = async () => {
@@ -19,7 +20,74 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Restore authenticated session on page refresh
+  const fetchSwaps = async () => {
+    try {
+      const swapsData = await authService.getMySwapRequests();
+      setMySwaps(Array.isArray(swapsData) ? swapsData : []);
+      return swapsData;
+    } catch (e) {
+      console.warn('Could not fetch user swap requests', e);
+      setMySwaps([]);
+    }
+  };
+
+  const getRelationshipWithUser = (targetUserId) => {
+    if (!targetUserId || !user?.id) {
+      return { status: 'NO_RELATIONSHIP', isConnected: false, isPending: false, direction: 'NONE', swap: null };
+    }
+    const tId = String(targetUserId).toLowerCase();
+    const myId = String(user.id).toLowerCase();
+
+    const relevant = (mySwaps || []).filter(s => {
+      const sId = String(s.sender_id || '').toLowerCase();
+      const rId = String(s.receiver_id || '').toLowerCase();
+      return sId === tId || rId === tId;
+    });
+
+    const accepted = relevant.find(s => s.status === 'ACCEPTED');
+    if (accepted) {
+      return {
+        status: 'CONNECTED',
+        isConnected: true,
+        isPending: false,
+        direction: 'MUTUAL',
+        swap: accepted
+      };
+    }
+
+    const pending = relevant.find(s => s.status === 'PENDING');
+    if (pending) {
+      const isOutgoing = String(pending.sender_id).toLowerCase() === myId;
+      return {
+        status: 'PENDING',
+        isConnected: false,
+        isPending: true,
+        direction: isOutgoing ? 'OUTGOING' : 'INCOMING',
+        swap: pending
+      };
+    }
+
+    const completed = relevant.find(s => s.status === 'COMPLETED');
+    if (completed) {
+      return {
+        status: 'COMPLETED',
+        isConnected: false,
+        isPending: false,
+        direction: 'MUTUAL',
+        swap: completed
+      };
+    }
+
+    return {
+      status: 'NO_RELATIONSHIP',
+      isConnected: false,
+      isPending: false,
+      direction: 'NONE',
+      swap: null
+    };
+  };
+
+  // Restore authenticated session on page refresh & maintain multi-tab sync
   useEffect(() => {
     async function loadUser() {
       const token = authService.getToken();
@@ -33,17 +101,64 @@ export const AuthProvider = ({ children }) => {
           setProfile(profileData);
 
           await fetchSkills();
+          await fetchSwaps();
         } catch (err) {
-          console.warn('Session expired or invalid token:', err);
-          authService.logout();
-          setUser(null);
-          setProfile(null);
-          setUserSkills([]);
+          console.warn('Session check notice:', err);
+          const currentToken = authService.getToken();
+          const isAuthError = !currentToken || 
+            (err.message && (
+              err.message.toLowerCase().includes('credential') ||
+              err.message.toLowerCase().includes('unauthorized') ||
+              err.message.toLowerCase().includes('token') ||
+              err.message.toLowerCase().includes('user no longer exists')
+            ));
+
+          if (isAuthError) {
+            authService.logout();
+            setUser(null);
+            setProfile(null);
+            setUserSkills([]);
+            setMySwaps([]);
+          } else {
+            // Preserve session on temporary connection glitch/cold start
+            const cachedUser = authService.getCurrentUser();
+            if (cachedUser) {
+              setUser(cachedUser);
+            }
+          }
         }
+      } else {
+        setUser(null);
+        setProfile(null);
+        setUserSkills([]);
+        setMySwaps([]);
       }
       setLoading(false);
     }
+
     loadUser();
+
+    // Listen for storage events to immediately synchronize state if account changes in another tab
+    const handleStorageChange = (e) => {
+      if (e.key === 'token' || e.key === 'user') {
+        const currentToken = authService.getToken();
+        const currentUser = authService.getCurrentUser();
+        if (!currentToken) {
+          setUser(null);
+          setProfile(null);
+          setUserSkills([]);
+          setMySwaps([]);
+        } else if (currentUser) {
+          setUser(currentUser);
+          authService.getMyProfile().then(setProfile).catch(() => {});
+          fetchSkills();
+          fetchSwaps();
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const login = async (email, password) => {
@@ -53,6 +168,7 @@ export const AuthProvider = ({ children }) => {
       const profileData = await authService.getMyProfile();
       setProfile(profileData);
       await fetchSkills();
+      await fetchSwaps();
     } catch (e) {
       console.warn('Could not fetch profile/skills after login', e);
     }
@@ -66,6 +182,7 @@ export const AuthProvider = ({ children }) => {
       const profileData = await authService.getMyProfile();
       setProfile(profileData);
       await fetchSkills();
+      await fetchSwaps();
     } catch (e) {
       console.warn('Could not fetch profile/skills after signup', e);
     }
@@ -77,6 +194,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setProfile(null);
     setUserSkills([]);
+    setMySwaps([]);
   };
 
   const refreshProfile = async () => {
@@ -93,6 +211,10 @@ export const AuthProvider = ({ children }) => {
     await fetchSkills();
   };
 
+  const refreshSwaps = async () => {
+    await fetchSwaps();
+  };
+
   const offeredSkills = (userSkills || []).filter(s => s.skill_type === 'OFFER');
   const wantedSkills = (userSkills || []).filter(s => s.skill_type === 'WANT');
 
@@ -104,13 +226,16 @@ export const AuthProvider = ({ children }) => {
         userSkills,
         offeredSkills,
         wantedSkills,
+        mySwaps,
         loading,
         isAuthenticated: !!user,
         login,
         signup,
         logout,
         refreshProfile,
-        refreshSkills
+        refreshSkills,
+        refreshSwaps,
+        getRelationshipWithUser
       }}
     >
       {children}

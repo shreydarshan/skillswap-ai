@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Settings, Shield, Bell, User, Lock, CheckCircle2, Globe, Sliders, Trash2, AlertTriangle, X } from 'lucide-react';
+import { Settings, Shield, Bell, User, Lock, CheckCircle2, Globe, Sliders, Trash2, AlertTriangle, X, LogOut } from 'lucide-react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import { useAuth } from '../context/AuthContext';
@@ -176,6 +176,31 @@ export default function SettingsPage() {
           </Button>
         </div>
       </form>
+
+      {/* Account Session Management */}
+      <Card className="space-y-4">
+        <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+          <LogOut className="w-4 h-4 text-slate-600" /> Account Session
+        </h3>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs">
+          <div>
+            <span className="font-bold text-slate-900 block">Sign Out</span>
+            <span className="text-slate-500">End your active authenticated session on this browser device.</span>
+          </div>
+          <Button
+            type="button"
+            variant="outline"
+            size="md"
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            icon={LogOut}
+          >
+            Log Out
+          </Button>
+        </div>
+      </Card>
 
       {/* DANGER ZONE: Account Deletion */}
       <Card className="border-rose-200 bg-rose-50/40 space-y-4">

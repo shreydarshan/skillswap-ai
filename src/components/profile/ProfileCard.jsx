@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MapPin, Sparkles, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MapPin, Sparkles, ArrowRight, MessageSquare, Clock, Check } from 'lucide-react';
 import Card from '../common/Card';
 import Button from '../common/Button';
 import SkillTag from '../common/SkillTag';
@@ -10,15 +11,20 @@ import QuickProfileModal from './QuickProfileModal';
 import ProfileAvatar from './ProfileAvatar';
 import { authService } from '../../services/auth';
 import { getAvatarUrl } from '../../utils/avatar';
+import { useAuth } from '../../context/AuthContext';
 
 export default function ProfileCard({ user, onSwapSuccess = null, onOpenChat = null }) {
+  const navigate = useNavigate();
+  const { getRelationshipWithUser, refreshSwaps } = useAuth();
   const [showWhyModal, setShowWhyModal] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
+  const targetId = user.id || user.user_id || user.candidate_id;
+  const relationship = getRelationshipWithUser ? getRelationshipWithUser(targetId) : { status: 'NO_RELATIONSHIP' };
+
   const handleOpenProfile = () => {
     setShowProfileModal(true);
-    const targetId = user.id || user.user_id || user.candidate_id;
     if (targetId) {
       authService.recordInteraction(targetId, 'VIEW').catch(() => {});
     }
@@ -51,6 +57,7 @@ export default function ProfileCard({ user, onSwapSuccess = null, onOpenChat = n
 
   const normalizedUser = {
     ...user,
+    id: user.id || user.user_id,
     name: candidateName,
     full_name: candidateName,
     avatar: avatarUrl,
@@ -183,18 +190,42 @@ export default function ProfileCard({ user, onSwapSuccess = null, onOpenChat = n
               variant="outline"
               size="sm"
               onClick={handleOpenProfile}
-              className="w-full text-xs"
+              className="w-full text-xs font-semibold py-2"
             >
               View Profile
             </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setShowRequestModal(true)}
-              className="w-full text-xs"
-            >
-              Request Swap
-            </Button>
+            {relationship.isConnected ? (
+              <Button
+                variant="primary"
+                size="sm"
+                icon={MessageSquare}
+                onClick={() => {
+                  if (onOpenChat) onOpenChat(normalizedUser);
+                  else navigate('/app/chats', { state: { recipientId: targetId, recipientUser: normalizedUser } });
+                }}
+                className="w-full text-xs font-semibold py-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                Open Chat
+              </Button>
+            ) : relationship.isPending ? (
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled
+                className="w-full text-xs font-medium py-2 bg-amber-50 text-amber-700 border border-amber-200 cursor-not-allowed opacity-90"
+              >
+                Pending
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setShowRequestModal(true)}
+                className="w-full text-xs font-semibold py-2"
+              >
+                Request Swap
+              </Button>
+            )}
           </div>
         </div>
       </Card>
@@ -214,7 +245,10 @@ export default function ProfileCard({ user, onSwapSuccess = null, onOpenChat = n
         user={normalizedUser}
         isOpen={showRequestModal}
         onClose={() => setShowRequestModal(false)}
-        onSuccess={onSwapSuccess}
+        onSuccess={(u, off, req) => {
+          if (refreshSwaps) refreshSwaps();
+          if (onSwapSuccess) onSwapSuccess(u, off, req);
+        }}
       />
 
       <QuickProfileModal

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Sparkles,
   ArrowRight,
+  ArrowLeftRight,
   CheckCircle2,
   AlertCircle,
   Loader2,
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const [recommendations, setRecommendations] = useState([]);
   const [mySkills, setMySkills] = useState([]);
+  const [mySwaps, setMySwaps] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [swapToast, setSwapToast] = useState(null);
@@ -41,16 +43,18 @@ export default function DashboardPage() {
     async function loadDashboardData() {
       setLoading(true);
       try {
-        const [recsData, skillsData] = await Promise.all([
+        const [recsData, skillsData, swapsData] = await Promise.all([
           authService.getHybridRecommendations().catch((err) => {
             console.warn('Failed to load hybrid recommendations:', err);
             return [];
           }),
           authService.getMySkills().catch(() => []),
+          authService.getMySwapRequests().catch(() => []),
         ]);
 
         setRecommendations(Array.isArray(recsData) ? recsData : []);
         setMySkills(Array.isArray(skillsData) ? skillsData : []);
+        setMySwaps(Array.isArray(swapsData) ? swapsData : []);
       } catch (err) {
         console.warn('Dashboard loading error:', err);
       } finally {
@@ -58,7 +62,7 @@ export default function DashboardPage() {
       }
     }
     loadDashboardData();
-  }, []);
+  }, [user]);
 
   // Determine user skill profile completeness
   const offeredCount = mySkills.filter((s) => s.skill_type === 'OFFER').length;
@@ -72,7 +76,12 @@ export default function DashboardPage() {
     const candId = c.candidate_id || c.user_id || c.id;
     if (!candId) continue;
     if (candId === user?.id || c.email === user?.email) continue;
-    if (c.is_test || (c.email && c.email.includes('test_'))) continue;
+    if (
+      c.is_test ||
+      (c.email && (c.email.includes('test_') || c.email.endsWith('@example.com'))) ||
+      (c.full_name && c.full_name.toLowerCase().startsWith('test student')) ||
+      (c.candidate_name && c.candidate_name.toLowerCase().startsWith('test student'))
+    ) continue;
     if (seenIds.has(candId)) continue;
     seenIds.add(candId);
     uniqueCandidates.push(c);
@@ -150,6 +159,33 @@ export default function DashboardPage() {
           />
         </div>
       </div>
+
+      {/* Pending Incoming Swap Proposals Banner */}
+      {!loading && mySwaps.some((s) => s.receiver_id === user?.id && s.status === 'PENDING') && (
+        <div className="p-4 sm:p-5 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 border border-blue-200 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-2xs animate-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+              <ArrowLeftRight className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm sm:text-base font-bold text-slate-900">
+                You have {mySwaps.filter((s) => s.receiver_id === user?.id && s.status === 'PENDING').length} pending skill swap proposal(s)!
+              </h4>
+              <p className="text-xs text-slate-600 mt-0.5">
+                A student on campus wants to exchange skills with you. Review and accept or decline.
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => navigate('/app/chats?tab=swaps')}
+            className="shrink-0 text-xs font-bold"
+          >
+            Review Proposals
+          </Button>
+        </div>
+      )}
 
       {/* Profile Readiness Banner (Only shown if skills are missing) */}
       {!loading && !isProfileReady && (

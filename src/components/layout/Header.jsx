@@ -9,6 +9,7 @@ import {
   ArrowRight,
   GraduationCap,
   Sparkles,
+  LogOut,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/auth';
@@ -18,7 +19,7 @@ import ProfileAvatar from '../profile/ProfileAvatar';
 
 export default function Header() {
   const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { user, profile, logout } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -317,6 +318,19 @@ export default function Header() {
             {displayName}
           </span>
         </div>
+
+        {/* Mobile Logout Button (Prominently accessible on mobile/tablet screens) */}
+        <button
+          onClick={() => {
+            logout();
+            navigate('/login');
+          }}
+          className="lg:hidden p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
+          title="Log out"
+          aria-label="Log out"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
       </div>
     </header>
   );

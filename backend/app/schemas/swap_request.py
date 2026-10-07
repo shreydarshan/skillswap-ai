@@ -37,5 +37,9 @@ class SwapRequestRead(BaseModel):
     status: SwapStatus
     created_at: datetime
     updated_at: datetime
+    sender_name: Optional[str] = None
+    receiver_name: Optional[str] = None
+    sender_avatar: Optional[str] = None
+    receiver_avatar: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
