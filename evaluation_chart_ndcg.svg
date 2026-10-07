@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" style="background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;">
+  <!-- Title -->
+  <text x="360.0" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1e293b">NDCG@5 Across Recommendation Models</text>
+  <text x="360.0" y="48" text-anchor="middle" font-size="11" fill="#64748b">Benchmark on SkillSwap AI Evaluation Dataset</text>
+  <!-- Grid lines -->
+  <line x1="140.0" y1="60" x2="140.0" y2="300" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3" />
+  <text x="140.0" y="318" text-anchor="middle" font-size="11" fill="#64748b">0.00</text>
+  <line x1="270.0" y1="60" x2="270.0" y2="300" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3" />
+  <text x="270.0" y="318" text-anchor="middle" font-size="11" fill="#64748b">0.25</text>
+  <line x1="400.0" y1="60" x2="400.0" y2="300" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3" />
+  <text x="400.0" y="318" text-anchor="middle" font-size="11" fill="#64748b">0.50</text>
+  <line x1="530.0" y1="60" x2="530.0" y2="300" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3" />
+  <text x="530.0" y="318" text-anchor="middle" font-size="11" fill="#64748b">0.75</text>
+  <line x1="660.0" y1="60" x2="660.0" y2="300" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="3,3" />
+  <text x="660.0" y="318" text-anchor="middle" font-size="11" fill="#64748b">1.00</text>
+  <text x="128" y="88" text-anchor="end" font-size="12" font-weight="400" fill="#334155">CONTENT_ONLY</text>
+  <rect x="140" y="67" width="520" height="26" rx="4" fill="#4f46e5" stroke="none" stroke-width="1.5" />
+  <text x="668" y="88" font-size="11" font-weight="700" fill="#1e293b">1.0000</text>
+  <text x="128" y="128" text-anchor="end" font-size="12" font-weight="400" fill="#334155">COLLABORATIVE_ONLY</text>
+  <rect x="140" y="107" width="2" height="26" rx="4" fill="#4f46e5" stroke="none" stroke-width="1.5" />
+  <text x="150" y="128" font-size="11" font-weight="700" fill="#1e293b">0.0000</text>
+  <text x="128" y="168" text-anchor="end" font-size="12" font-weight="400" fill="#334155">HYBRID_80_20</text>
+  <rect x="140" y="147" width="520" height="26" rx="4" fill="#4f46e5" stroke="none" stroke-width="1.5" />
+  <text x="668" y="168" font-size="11" font-weight="700" fill="#1e293b">1.0000</text>
+  <text x="128" y="208" text-anchor="end" font-size="12" font-weight="600" fill="#334155">HYBRID_70_30</text>
+  <rect x="140" y="187" width="520" height="26" rx="4" fill="#2563eb" stroke="#1d4ed8" stroke-width="1.5" />
+  <text x="668" y="208" font-size="11" font-weight="700" fill="#1e293b">1.0000</text>
+  <text x="128" y="248" text-anchor="end" font-size="12" font-weight="400" fill="#334155">HYBRID_60_40</text>
+  <rect x="140" y="227" width="520" height="26" rx="4" fill="#4f46e5" stroke="none" stroke-width="1.5" />
+  <text x="668" y="248" font-size="11" font-weight="700" fill="#1e293b">1.0000</text>
+  <text x="128" y="288" text-anchor="end" font-size="12" font-weight="400" fill="#334155">HYBRID_50_50</text>
+  <rect x="140" y="267" width="520" height="26" rx="4" fill="#4f46e5" stroke="none" stroke-width="1.5" />
+  <text x="668" y="288" font-size="11" font-weight="700" fill="#1e293b">1.0000</text>
+  <line x1="140" y1="60" x2="140" y2="300" stroke="#94a3b8" stroke-width="1.5" />
+  <line x1="140" y1="300" x2="660" y2="300" stroke="#94a3b8" stroke-width="1.5" />
+</svg>

@@ -1,0 +1,186 @@
+{
+  "metadata": {
+    "timestamp": "2026-10-07T10:48:34.315607+00:00",
+    "total_users_count": 7,
+    "evaluated_users_count": 2,
+    "cold_start_users_count": 5,
+    "insufficient_history_users_count": 0,
+    "total_interactions_count": 2,
+    "interaction_distribution": {
+      "VIEW": 2,
+      "LIKE": 0,
+      "REQUEST": 0,
+      "ACCEPT": 0,
+      "COMPLETE": 0
+    },
+    "relevance_definition": {
+      "positive_types": [
+        "ACCEPT",
+        "REQUEST",
+        "COMPLETE"
+      ],
+      "min_graded_weight": 0.6,
+      "graded_weights": {
+        "VIEW": 0.1,
+        "LIKE": 0.3,
+        "REQUEST": 0.6,
+        "ACCEPT": 0.8,
+        "COMPLETE": 1.0
+      }
+    },
+    "data_limitation_statement": "Insufficient real interaction data for statistically meaningful evaluation.",
+    "is_statistically_significant": false
+  },
+  "model_results": [
+    {
+      "model_name": "CONTENT_ONLY",
+      "description": "Stage 5A pure reciprocal skill matching (100% content, 0% collaborative)",
+      "content_weight": 1.0,
+      "collaborative_weight": 0.0,
+      "evaluated_users_count": 2,
+      "cold_start_served_count": 0,
+      "metrics": {
+        "precision@3": 0.0,
+        "recall@3": 0.0,
+        "ndcg@3": 1.0,
+        "hit_rate@3": 0.0,
+        "reciprocity@3": 0.3333,
+        "precision@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 1.0,
+        "hit_rate@5": 0.0,
+        "reciprocity@5": 0.2,
+        "precision@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 1.0,
+        "hit_rate@10": 0.0,
+        "reciprocity@10": 0.1667
+      }
+    },
+    {
+      "model_name": "COLLABORATIVE_ONLY",
+      "description": "Stage 5D pure user-user collaborative filtering based on interactions",
+      "content_weight": null,
+      "collaborative_weight": null,
+      "evaluated_users_count": 2,
+      "cold_start_served_count": 0,
+      "metrics": {
+        "precision@3": 0.0,
+        "recall@3": 0.0,
+        "ndcg@3": 0.0,
+        "hit_rate@3": 0.0,
+        "reciprocity@3": 0.0,
+        "precision@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 0.0,
+        "hit_rate@5": 0.0,
+        "reciprocity@5": 0.0,
+        "precision@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 0.0,
+        "hit_rate@10": 0.0,
+        "reciprocity@10": 0.0
+      }
+    },
+    {
+      "model_name": "HYBRID_80_20",
+      "description": "Hybrid weighting: 80% content-based reciprocal, 20% collaborative",
+      "content_weight": 0.8,
+      "collaborative_weight": 0.2,
+      "evaluated_users_count": 2,
+      "cold_start_served_count": 0,
+      "metrics": {
+        "precision@3": 0.0,
+        "recall@3": 0.0,
+        "ndcg@3": 1.0,
+        "hit_rate@3": 0.0,
+        "reciprocity@3": 0.3333,
+        "precision@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 1.0,
+        "hit_rate@5": 0.0,
+        "reciprocity@5": 0.2,
+        "precision@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 1.0,
+        "hit_rate@10": 0.0,
+        "reciprocity@10": 0.1667
+      }
+    },
+    {
+      "model_name": "HYBRID_70_30",
+      "description": "Production baseline hybrid: 70% content-based reciprocal, 30% collaborative",
+      "content_weight": 0.7,
+      "collaborative_weight": 0.3,
+      "evaluated_users_count": 2,
+      "cold_start_served_count": 0,
+      "metrics": {
+        "precision@3": 0.0,
+        "recall@3": 0.0,
+        "ndcg@3": 1.0,
+        "hit_rate@3": 0.0,
+        "reciprocity@3": 0.3333,
+        "precision@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 1.0,
+        "hit_rate@5": 0.0,
+        "reciprocity@5": 0.2,
+        "precision@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 1.0,
+        "hit_rate@10": 0.0,
+        "reciprocity@10": 0.1667
+      }
+    },
+    {
+      "model_name": "HYBRID_60_40",
+      "description": "Hybrid weighting: 60% content-based reciprocal, 40% collaborative",
+      "content_weight": 0.6,
+      "collaborative_weight": 0.4,
+      "evaluated_users_count": 2,
+      "cold_start_served_count": 0,
+      "metrics": {
+        "precision@3": 0.0,
+        "recall@3": 0.0,
+        "ndcg@3": 1.0,
+        "hit_rate@3": 0.0,
+        "reciprocity@3": 0.3333,
+        "precision@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 1.0,
+        "hit_rate@5": 0.0,
+        "reciprocity@5": 0.2,
+        "precision@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 1.0,
+        "hit_rate@10": 0.0,
+        "reciprocity@10": 0.1667
+      }
+    },
+    {
+      "model_name": "HYBRID_50_50",
+      "description": "Balanced hybrid: 50% content-based reciprocal, 50% collaborative",
+      "content_weight": 0.5,
+      "collaborative_weight": 0.5,
+      "evaluated_users_count": 2,
+      "cold_start_served_count": 0,
+      "metrics": {
+        "precision@3": 0.0,
+        "recall@3": 0.0,
+        "ndcg@3": 1.0,
+        "hit_rate@3": 0.0,
+        "reciprocity@3": 0.3333,
+        "precision@5": 0.0,
+        "recall@5": 0.0,
+        "ndcg@5": 1.0,
+        "hit_rate@5": 0.0,
+        "reciprocity@5": 0.2,
+        "precision@10": 0.0,
+        "recall@10": 0.0,
+        "ndcg@10": 1.0,
+        "hit_rate@10": 0.0,
+        "reciprocity@10": 0.1667
+      }
+    }
+  ]
+}
