@@ -1,246 +1,132 @@
-# SkillSwap AI 🎓🤝
-
+# SkillSwap AI
 ### A Hybrid Recommendation System for Student Skill Exchange
 
-**Learn what you want. Teach what you know. Grow together.**
+SkillSwap AI is a full-stack web application that connects students for reciprocal skill exchange. It recommends potential learning partners by analyzing the skills students can teach, the skills they want to learn, and their interaction history.
 
-SkillSwap AI is a full-stack web application that connects students who want to exchange skills. It uses a hybrid recommendation system to identify compatible learning partners by analyzing the skills students can teach, the skills they want to learn, and their interactions with other students.
+The goal is to make peer-to-peer learning more accessible by helping students find partners who can learn from each other.
 
-Instead of relying on a traditional course marketplace or paid tutoring model, SkillSwap AI encourages **peer-to-peer learning through reciprocal skill exchange**.
-
-🌐 **Live Demo:** [Open SkillSwap AI](https://skillswap-ai-alpha.vercel.app)  
-📦 **GitHub Repository:** [shreydarshan/skillswap-ai](https://github.com/shreydarshan/skillswap-ai)
-
----
-
-## 📌 Table of Contents
-
-- [Project Overview](#-project-overview)
-- [Problem Statement](#-problem-statement)
-- [Our Solution](#-our-solution)
-- [Key Features](#-key-features)
-- [How It Works](#-how-it-works)
-- [Recommendation System](#-recommendation-system)
-- [System Architecture](#-system-architecture)
-- [Technology Stack](#-technology-stack)
-- [Database Design](#-database-design)
-- [API Overview](#-api-overview)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Deployment](#-deployment)
-- [Security and Privacy](#-security-and-privacy)
-- [Testing and Quality Assurance](#-testing-and-quality-assurance)
-- [Limitations and Future Improvements](#-limitations-and-future-improvements)
-- [Learning Outcomes](#-learning-outcomes)
-- [Author](#-author)
-- [License](#-license)
+**Live Demo:** [SkillSwap AI](https://skillswap-ai-alpha.vercel.app)  
+**Backend API:** [FastAPI Service](https://skillswap-ai-backend-obqv.onrender.com)  
+**API Documentation:** [Swagger UI](https://skillswap-ai-backend-obqv.onrender.com/docs)  
+**Repository:** [GitHub](https://github.com/shreydarshan/skillswap-ai)
 
 ---
 
-## 🎯 Project Overview
+## Table of Contents
 
-SkillSwap AI is a student-focused skill-sharing platform powered by a hybrid recommendation engine.
+- [Overview](#overview)
+- [Problem Statement](#problem-statement)
+- [Key Features](#key-features)
+- [How It Works](#how-it-works)
+- [Recommendation Algorithm](#recommendation-algorithm)
+- [System Architecture](#system-architecture)
+- [Technology Stack](#technology-stack)
+- [Database Design](#database-design)
+- [API Overview](#api-overview)
+- [Getting Started](#getting-started)
+- [Environment Configuration](#environment-configuration)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Security](#security)
+- [Limitations and Future Improvements](#limitations-and-future-improvements)
+- [Author](#author)
 
-Students create profiles, list the skills they can teach, and specify the skills they want to learn. The system compares student profiles and recommends potential partners based on **reciprocal skill compatibility**.
+---
 
-The application also tracks meaningful interactions, such as likes, swap requests, accepted swaps, and completed exchanges. These signals can support more personalized recommendations as interaction history grows.
+## Overview
 
-### Example
+Students often possess skills that others want to learn, while also having their own learning goals. SkillSwap AI connects these complementary needs through a recommendation engine designed around mutual skill compatibility.
 
-Imagine two students:
+For example:
 
-| Student | Skills They Can Teach | Skills They Want to Learn |
+| Student | Can Teach | Wants to Learn |
 |---|---|---|
 | Student A | Python, SQL | React, UI/UX Design |
 | Student B | React, UI/UX Design | Python, SQL |
 
-These students are strong potential matches because each student can teach what the other wants to learn.
+These students are strong potential exchange partners because each can teach skills the other wants to learn.
 
-SkillSwap AI identifies this mutual compatibility and presents the students with an explainable recommendation.
+Unlike a conventional course platform, SkillSwap AI focuses on **reciprocal learning between students**.
 
-### Project Goals
+### Problem Statement
 
-- Encourage collaborative and peer-to-peer learning.
-- Help students discover learning partners more efficiently.
-- Make skill exchange accessible through a responsive web application.
-- Apply machine-learning concepts to a practical recommendation problem.
-- Combine profile-based compatibility with behavioral interaction signals.
-- Provide transparent recommendations instead of unexplained scores.
+Finding a suitable peer-learning partner can be difficult. Students may not know who has the skills they need or whether they can offer something valuable in return.
 
----
+SkillSwap AI addresses this problem by comparing teaching skills and learning goals, ranking potential partners, and providing a platform for students to request swaps, communicate, and complete exchanges.
 
-## ❗ Problem Statement
+## Key Features
 
-Students often want to learn practical skills but may face barriers such as expensive courses, limited access to mentors, and difficulty finding suitable learning partners.
-
-At the same time, many students already possess valuable knowledge they could share with others.
-
-Traditional learning platforms primarily help users find content, courses, or instructors. They do not necessarily help students find peers who can exchange skills with them in a mutually beneficial way.
-
-**The problem:** How can we efficiently identify students whose learning goals and teaching abilities complement one another?
-
-SkillSwap AI addresses this challenge through reciprocal skill matching and hybrid recommendations.
-
----
-
-## 💡 Our Solution
-
-SkillSwap AI provides a centralized platform where students can:
-
-1. Create an account and build a profile.
-2. Add skills they can teach.
-3. Add skills they want to learn.
-4. Discover recommended students.
-5. Understand why a student was recommended.
-6. Send, accept, or decline skill-swap requests.
-7. Chat with connected students.
-8. Mark an exchange as completed.
-
-The recommendation engine initially focuses on skill compatibility. As users interact with the platform, collaborative signals can contribute to personalized rankings.
-
-The system is designed to remain useful for new users who have little or no interaction history.
-
----
-
-## ✨ Key Features
-
-### 👤 Student Profiles
-
-- Secure registration and login.
+### Student Profiles
+- User registration and login.
 - Profile information, biography, and university details.
 - Customizable avatar or profile image.
-- Separate lists for teaching skills and learning goals.
+- Separate teaching-skill and learning-goal lists.
 - Persistent profile data stored in PostgreSQL.
 
-### 🤖 Hybrid Recommendation Engine
-
+### Recommendation System
 - Reciprocal skill compatibility scoring.
 - Cosine similarity for skill-profile comparison.
-- User-user collaborative filtering.
-- Configurable hybrid recommendation weights.
-- Cold-start handling for users without interaction history.
-- Duplicate and ineligible candidate filtering.
+- Collaborative filtering based on user interactions.
+- Hybrid ranking with configurable weights.
+- Cold-start handling for users with limited interaction history.
+- Explanations based on actual skill overlap.
 
-### 🔍 Explore and Discover
-
-- Browse potential learning partners.
-- View profile details and skill tags.
-- See recommendation scores.
-- Understand the skills that make a match relevant.
-
-### 🔄 Skill-Swap Lifecycle
-
-- Create and manage swap requests.
-- Accept or decline incoming requests.
+### Skill Exchange
+- Discover and explore students.
+- View student profiles and relevant skills.
+- Send, accept, or decline swap requests.
 - Prevent duplicate active requests in either direction.
-- Identify pending, connected, and completed relationships.
-- Complete an exchange and reconnect later if desired.
+- Track pending, connected, and completed relationships.
+- Complete an exchange while preserving chat history.
 
-### 💬 Messaging
+### Messaging
+- Chat between connected students.
+- Persistent message storage.
+- Authorization checks for conversation participants.
+- Protection against unauthorized messaging.
 
-- Chat with connected students.
-- Persist messages in the database.
-- Enforce conversation-participant permissions.
-- Preserve chat history after an exchange is completed.
-
-### 🔐 Authentication and Data Protection
-
-- JWT-based authentication.
-- Password hashing using Argon2/Bcrypt.
-- Protected API endpoints.
-- User-specific resource access controls.
-- Validation of swap and messaging permissions.
-
-### 📱 Responsive User Interface
-
-- Modern React interface.
-- Responsive layouts for desktop and mobile.
-- Reusable UI components.
-- Student cards, profile modals, skill chips, and navigation.
-- Clear feedback for recommendation and swap states.
+### User Experience
+- Responsive desktop and mobile interface.
+- Reusable React components.
+- Search and discovery interfaces.
+- Profile cards, skill tags, and recommendation scores.
+- Authentication state persistence.
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
-The application follows this workflow:
-
-```text
-        Student Registration
-                 |
-                 v
-          Create Profile
-                 |
-                 v
-       Add Teaching Skills
-       and Learning Goals
-                 |
-                 v
-       Recommendation Engine
-                 |
-        +--------+--------+
-        |                 |
-        v                 v
-  Content-Based     Collaborative
-    Matching         Filtering
-        |                 |
-        +--------+--------+
-                 |
-                 v
-        Hybrid Ranking
-                 |
-                 v
-     Recommended Students
-                 |
-                 v
-      Send Swap Request
-                 |
-                 v
-       Accept / Decline
-                 |
-                 v
-          Chat & Learn
-                 |
-                 v
-        Complete the Swap
-```
-
-### Recommendation workflow
-
-1. The backend retrieves eligible student profiles and their skills.
-2. The content-based engine calculates reciprocal skill compatibility.
-3. The collaborative engine uses available interaction history.
-4. The hybrid engine combines the available recommendation signals.
-5. Candidates are filtered and ranked.
-6. The frontend displays recommendations and relevant explanations.
-7. Subsequent interactions can provide additional behavioral signals.
+1. **Create an account:** A student registers and creates a profile.
+2. **Add skills:** The student specifies what they can teach and want to learn.
+3. **Generate recommendations:** The backend compares student profiles and available interaction history.
+4. **Rank potential partners:** The hybrid recommendation engine combines the available signals.
+5. **Request a swap:** A student sends a request to a compatible partner.
+6. **Connect and communicate:** After acceptance, connected students can chat.
+7. **Complete the exchange:** The students can mark their skill swap as completed.
 
 ---
 
-## 🧠 Recommendation System
+## Recommendation Algorithm
 
-The recommendation engine is the core technical component of SkillSwap AI.
-
-It combines two recommendation approaches:
-
-1. **Content-Based Filtering**
-2. **Collaborative Filtering**
-
-These are combined using a weighted hybrid scoring strategy.
+The recommendation engine combines content-based filtering and collaborative filtering.
 
 ### 1. Content-Based Filtering
 
-Content-based filtering compares the skills a student wants to learn with the skills another student can teach.
+Content-based filtering compares the skills one student wants to learn with the skills another student offers.
 
-For two students, A and B, the system evaluates two directions.
+For students \(A\) and \(B\), the engine calculates two directional similarities.
 
-**Forward compatibility:** Can B teach A what A wants to learn?
+**Forward compatibility**
+
+How well B's offered skills match A's learning goals:
 
 \[
 F(A,B)=\operatorname{Cosine}(W_A,O_B)
 \]
 
-**Reverse compatibility:** Can A teach B what B wants to learn?
+**Reverse compatibility**
+
+How well A's offered skills match B's learning goals:
 
 \[
 R(A,B)=\operatorname{Cosine}(O_A,W_B)
@@ -248,22 +134,18 @@ R(A,B)=\operatorname{Cosine}(O_A,W_B)
 
 Where:
 
-- \(O_A\) = skills offered by student A.
-- \(W_A\) = skills wanted by student A.
-- \(O_B\) = skills offered by student B.
-- \(W_B\) = skills wanted by student B.
+- \(O_A\): skills offered by student A.
+- \(W_A\): skills wanted by student A.
+- \(O_B\): skills offered by student B.
+- \(W_B\): skills wanted by student B.
 
-The reciprocal content score is the average of the two directional scores:
+The reciprocal content score is:
 
 \[
 C(A,B)=\frac{F(A,B)+R(A,B)}{2}
 \]
 
-#### Why reciprocal matching matters
-
-A student who can teach another student is not automatically a good exchange partner. The reverse direction must also be considered.
-
-By evaluating both directions, the system prioritizes students who can potentially benefit each other.
+This approach rewards mutual compatibility rather than matching only one student's needs.
 
 #### Cosine Similarity
 
@@ -274,122 +156,96 @@ Cosine similarity measures the similarity between two vectors:
 \frac{x\cdot y}{\|x\|\|y\|}
 \]
 
-The implementation represents skills using binary vectors constructed from a shared skill vocabulary.
+SkillSwap AI represents skills using binary vectors derived from a shared skill vocabulary. A value of `1` indicates the presence of a skill, while `0` indicates its absence.
 
-For example, if the skill vocabulary is:
-
-```text
-[Python, React, UI/UX]
-```
-
-A student who offers Python and React can be represented as:
-
-```text
-[1, 1, 0]
-```
-
-A student who wants React can be represented as:
-
-```text
-[0, 1, 0]
-```
-
-The resulting cosine similarity measures the overlap between the represented skill sets.
-
-The engine also handles zero vectors safely, avoiding division-by-zero errors when a student has no relevant skills.
+The implementation safely handles zero vectors to avoid division-by-zero errors.
 
 ### 2. Collaborative Filtering
 
-Content-based matching uses profile information. Collaborative filtering adds information from user interactions.
+Collaborative filtering uses interaction history to identify behavioral patterns among users.
 
-SkillSwap AI tracks behavioral signals such as:
+The system records signals such as profile views, likes, swap requests, accepted swaps, and completed swaps.
+
+The configured interaction weights are:
 
 | Interaction | Weight |
 |---|---:|
-| Profile view | 0.1 |
+| View | 0.1 |
 | Like | 0.3 |
-| Swap request | 0.6 |
-| Accepted swap | 0.8 |
-| Completed swap | 1.0 |
+| Request | 0.6 |
+| Accept | 0.8 |
+| Complete | 1.0 |
 
-For a user-target pair, the implementation uses the maximum applicable interaction weight as the observed preference signal.
+For a user-target pair, the implementation uses the maximum applicable interaction weight as its observed preference signal.
 
-The system then calculates user-user cosine similarity based on interaction histories and uses positively similar users to estimate potential interest in other candidates.
+The collaborative engine calculates user-user cosine similarity and uses positively similar users to estimate interest in other candidates.
 
 Conceptually:
 
 \[
 CF(A,C)=
-\frac{\sum_{U} s(A,U)\,r(U,C)}
-{\sum_{U} s(A,U)}
+\frac{\sum_U s(A,U)\,r(U,C)}
+{\sum_U s(A,U)}
 \]
 
 Where:
 
-- \(A\) is the requesting student.
+- \(A\) is the current user.
 - \(C\) is a candidate.
-- \(U\) represents other users with relevant interaction history.
-- \(s(A,U)\) is the similarity between users A and U.
-- \(r(U,C)\) is the observed interaction signal between U and C.
+- \(U\) represents users with relevant interaction history.
+- \(s(A,U)\) is the similarity between users.
+- \(r(U,C)\) is the observed interaction signal.
 
-The actual implementation uses eligible positive-similarity neighbors and handles cases where a meaningful collaborative score cannot be calculated.
-
-**Important:** Interaction weights are engineering choices used to model relative preference strength. They are not learned probabilities or empirically proven universal values.
+The implementation handles unavailable collaborative evidence rather than inventing scores when interaction data is insufficient.
 
 ### 3. Hybrid Recommendation
 
-The hybrid model combines content compatibility and collaborative evidence.
-
-The configured scoring formula is:
+The hybrid model combines reciprocal skill compatibility and collaborative evidence.
 
 \[
 H(A,B)=0.70C(A,B)+0.30CF(A,B)
 \]
 
-Where:
+The initial configuration assigns:
 
-- \(H(A,B)\) = hybrid score.
-- \(C(A,B)\) = reciprocal content-based score.
-- \(CF(A,B)\) = collaborative filtering score.
+- **70% weight** to reciprocal content-based compatibility.
+- **30% weight** to collaborative filtering.
 
-The initial weighting gives more importance to direct skill compatibility while still allowing interaction history to influence recommendations.
+The weighting is a configurable baseline, not a claim that 70/30 is universally optimal.
 
-#### Cold-start handling
+### Cold-Start Handling
 
-New users may not have enough interaction history for collaborative filtering.
+New users may have little or no interaction history. In these cases, collaborative filtering may not provide a meaningful score.
 
-When collaborative evidence is unavailable, the system falls back to content-based scoring instead of assigning an artificial collaborative score or penalizing the new user.
+SkillSwap AI falls back to content-based recommendations when collaborative evidence is unavailable. This allows new users to receive recommendations without fabricated interaction data.
 
-This makes the system useful even when the platform has limited behavioral data.
+### Explainable Recommendations
 
-#### Recommendation explainability
+The application can show why a student was recommended by identifying:
 
-The application can explain recommendations using the actual skills that overlap in each direction:
+- Skills the candidate offers that the current student wants.
+- Skills the current student offers that the candidate wants.
+- Collaborative evidence when available.
 
-- Skills the recommended student offers that the current student wants.
-- Skills the current student offers that the recommended student wants.
-- Collaborative evidence when it is available.
+### Evaluation
 
-The goal is to make recommendations understandable to users rather than displaying a score without context.
+The project's evaluation work compares content-based, collaborative, and hybrid configurations, including 80/20, 70/30, 60/40, and 50/50 weightings.
 
-#### Algorithm evaluation
+Relevant ranking metrics include:
 
-The project includes an evaluation stage designed to compare content-based, collaborative, and hybrid configurations.
+- Precision@K
+- Recall@K
+- Normalized Discounted Cumulative Gain (NDCG@K)
+- Hit Rate@K
+- Reciprocity-oriented evaluation
 
-The planned comparisons include:
-
-- Content-only recommendations.
-- Collaborative-only recommendations.
-- Hybrid configurations using 80/20, 70/30, 60/40, and 50/50 weights.
-- Precision@K, Recall@K, NDCG@K, Hit Rate@K, and reciprocity-oriented evaluation.
-
-The 70/30 configuration is the project's initial hybrid baseline; it should not be described as universally optimal without supporting experimental results.
+The preferred weighting should be justified using measured results rather than assumed to be optimal.
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
-SkillSwap AI follows a frontend-backend-database architecture.
+SkillSwap AI uses a frontend-backend-database architecture.
 
 ```text
 +----------------------------------+
@@ -410,11 +266,9 @@ SkillSwap AI follows a frontend-backend-database architecture.
 | Profile and Skill APIs           |
 | Swap and Messaging APIs           |
 | Recommendation Engine             |
-|                                  |
-| NumPy | Scikit-learn | SQLAlchemy |
 +----------------+-----------------+
                  |
-                 | SQL
+                 | SQLAlchemy / SQL
                  v
 +----------------------------------+
 |          PostgreSQL              |
@@ -427,135 +281,104 @@ SkillSwap AI follows a frontend-backend-database architecture.
 
 ### Frontend
 
-The frontend is responsible for:
-
-- Rendering the user interface.
-- Handling navigation and form interactions.
-- Managing authentication state.
-- Calling backend REST endpoints.
-- Displaying recommendations and swap states.
+The React frontend manages the user interface, navigation, forms, authentication state, and API communication.
 
 ### Backend
 
-The backend is responsible for:
-
-- Authentication and access control.
-- Profile and skill management.
-- Database operations.
-- Recommendation generation and ranking.
-- Swap request state transitions.
-- Messaging and interaction tracking.
+FastAPI handles authentication, authorization, profile management, skill operations, recommendations, swap requests, messaging, and database access.
 
 ### Database
 
-PostgreSQL provides persistent storage for application entities, user profiles, skill information, interactions, swap requests, messages, and ratings.
-
-The recommendation engine runs in the Python backend rather than relying on client-side calculations.
+PostgreSQL stores user accounts, profiles, skills, interactions, swap requests, messages, and ratings. The recommendation engine runs on the backend in Python.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Technology | Purpose |
 |---|---|
-| React | Component-based frontend |
-| Vite | Frontend development server and build tool |
-| Tailwind CSS | Responsive UI styling |
+| React | Frontend user interface |
+| Vite | Development server and build tooling |
+| Tailwind CSS | Responsive styling |
 | Lucide React | Icons |
 | Python | Backend and recommendation logic |
 | FastAPI | REST API framework |
-| SQLAlchemy | ORM and database operations |
+| SQLAlchemy | ORM and database access |
 | PostgreSQL | Relational database |
-| Neon | Hosted PostgreSQL in production |
+| Neon | Hosted PostgreSQL |
 | NumPy | Numerical operations |
-| Scikit-learn | Cosine similarity and related ML utilities |
+| Scikit-learn | Cosine similarity and machine-learning utilities |
 | JWT | Authentication tokens |
 | pwdlib | Password hashing support |
-| Pytest | Automated backend testing |
-| Git and GitHub | Version control and source hosting |
-| Vercel | Frontend deployment |
-| Render | Backend deployment |
+| Pytest | Automated testing |
+| Git and GitHub | Version control |
+| Vercel | Frontend hosting |
+| Render | Backend hosting |
 
 ---
 
-## 🗄️ Database Design
+## Database Design
 
-The application uses a relational PostgreSQL database with UUID-based primary keys, foreign keys, timestamps, constraints, and SQLAlchemy relationships.
+The PostgreSQL database uses UUID-based primary keys, foreign keys, timestamps, relationships, and data-integrity constraints.
 
-The main entities include:
-
-| Table | Responsibility |
+| Table | Purpose |
 |---|---|
-| `users` | Account identity and authentication information |
-| `profiles` | Student profile information and preferences |
+| `users` | Account and authentication information |
+| `profiles` | Student profiles and preferences |
 | `skills` | Shared skill vocabulary |
-| `user_skills` | Skills associated with users, including their role and proficiency |
-| `interactions` | User activity used for recommendation signals |
+| `user_skills` | Skills associated with users |
+| `interactions` | Behavioral signals for recommendations |
 | `swap_requests` | Skill-exchange request lifecycle |
-| `messages` | Messages between connected students |
+| `messages` | Chat messages |
 | `ratings` | Ratings associated with exchanges |
 
-### Data integrity
+Database constraints and backend validation help maintain consistent relationships and prevent invalid operations, including self-directed swaps and unauthorized access to private resources.
 
-The schema uses relational constraints and validation to help maintain consistent data, including:
-
-- Foreign-key relationships.
-- Unique constraints where appropriate.
-- Proficiency range validation.
-- Restrictions against self-directed interactions or swaps.
-- Ownership and participation checks in relevant API operations.
-
-The application also distinguishes demonstration profiles from test accounts so that test records can be excluded from user-facing recommendations.
+Demo profiles are distinguished from test accounts so test records can be excluded from recommendations.
 
 ---
 
-## 🔌 API Overview
+## API Overview
 
-FastAPI exposes REST endpoints for the frontend.
+The backend exposes REST endpoints through FastAPI.
 
-The backend's interactive API documentation is available at:
-
-- Swagger UI: `https://skillswap-ai-backend-obqv.onrender.com/docs`
-- ReDoc: `https://skillswap-ai-backend-obqv.onrender.com/redoc`
-
-### Main API areas
-
-| API Area | Purpose |
+| Endpoint | Purpose |
 |---|---|
-| `/api/health` | Check backend health |
-| `/api/health/db` | Check database connectivity |
-| `/api/auth/register` | Register a student |
-| `/api/auth/login` | Authenticate a student |
+| `/api/health` | Backend health check |
+| `/api/health/db` | Database connectivity check |
+| `/api/auth/register` | Register a user |
+| `/api/auth/login` | Authenticate a user |
 | `/api/auth/me` | Retrieve the authenticated user |
 | `/api/users` | User-related operations |
 | `/api/profiles` | Profile management |
 | `/api/skills` | Skill management |
-| `/api/students` | Discover eligible students |
-| `/api/recommendations` | Retrieve hybrid recommendations |
-| `/api/recommendations/collaborative` | Retrieve collaborative recommendations |
-| `/api/recommendations/hybrid` | Retrieve hybrid recommendations |
+| `/api/students` | Student discovery |
+| `/api/recommendations` | Hybrid recommendations |
+| `/api/recommendations/collaborative` | Collaborative recommendations |
+| `/api/recommendations/hybrid` | Hybrid recommendation endpoint |
 | `/api/messages/me` | Retrieve the current user's messages |
 | `/api/messages/me/unread-count` | Retrieve unread message count |
-| `/api/swap-requests` | Manage skill-swap requests |
+| `/api/swap-requests` | Swap request operations |
 
-Additional endpoints support individual resources and relationship-state queries.
+Additional routes support individual resources and relationship-state queries.
 
-For exact request parameters, response schemas, and available operations, refer to the running Swagger documentation. The documentation generated by FastAPI reflects the actual backend API.
+Explore the interactive API documentation for available request schemas, parameters, and responses:
+
+- [Swagger UI](https://skillswap-ai-backend-obqv.onrender.com/docs)
+- [ReDoc](https://skillswap-ai-backend-obqv.onrender.com/redoc)
 
 ---
 
-## 🚀 Getting Started
-
-Follow these instructions to run the project locally.
+## Getting Started
 
 ### Prerequisites
 
-Install the following:
+Install:
 
 - Git
 - Node.js and npm
-- Python 3.10 or a compatible version supported by the project dependencies
-- PostgreSQL, or an accessible PostgreSQL database such as Neon
+- Python compatible with the backend dependencies
+- PostgreSQL, either locally or through a hosted provider such as Neon
 
 ### 1. Clone the repository
 
@@ -564,11 +387,7 @@ git clone https://github.com/shreydarshan/skillswap-ai.git
 cd skillswap-ai
 ```
 
-### 2. Configure the backend
-
-Create and activate a Python virtual environment.
-
-**Windows PowerShell:**
+### 2. Set up the backend
 
 ```powershell
 cd backend
@@ -579,58 +398,37 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-If PowerShell blocks virtual-environment activation, you can run the environment's Python executable directly.
-
-**macOS/Linux:**
+For macOS/Linux, activate the virtual environment using:
 
 ```bash
-cd backend
-
-python3 -m venv venv
 source venv/bin/activate
-
-pip install -r requirements.txt
 ```
 
-### 3. Configure environment variables
+### 3. Configure the database
 
-Create a `.env` file inside the `backend` directory using the project's environment-variable example as a reference, if available.
+Create a PostgreSQL database and configure the backend environment variables as described in the next section.
 
-Configure your database connection and authentication settings before starting the backend.
-
-See [Environment Variables](#-environment-variables) below.
+Use the repository's environment example and backend settings module to confirm the exact configuration names.
 
 ### 4. Start the backend
 
-From the `backend` directory, run:
+From the `backend` directory:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-The API should be available at:
+The API should be available at `http://127.0.0.1:8000`.
 
-```text
-http://127.0.0.1:8000
-```
+### 5. Install frontend dependencies
 
-Open the interactive documentation:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-### 5. Configure the frontend
-
-Open a new terminal at the repository root.
-
-Install the frontend dependencies:
+Open a new terminal at the repository root:
 
 ```bash
 npm install
 ```
 
-Create a `.env` file in the frontend project root and configure the API URL:
+Create the frontend `.env` file:
 
 ```env
 VITE_API_URL=http://127.0.0.1:8000/api
@@ -642,53 +440,23 @@ VITE_API_URL=http://127.0.0.1:8000/api
 npm run dev
 ```
 
-Vite will display the local URL, typically:
-
-```text
-http://localhost:5173
-```
-
-Open that URL in your browser.
+Open the local URL printed by Vite, typically `http://localhost:5173`.
 
 ### 7. Build the frontend
-
-To verify that the frontend can be built for production:
 
 ```bash
 npm run build
 ```
 
-To run the backend test suite from the repository root:
-
-```bash
-python -m pytest backend/tests/ -v
-```
-
-If your active Python environment is inside `backend/venv`, use:
-
-```powershell
-.\backend\venv\Scripts\python.exe -m pytest backend/tests/ -v
-```
-
-**Note:** Database configuration, required environment variables, and seed-data setup must be completed before the application can run successfully. Use the repository's actual dependency files and environment example as the source of truth if they differ from these general instructions.
-
 ---
 
-## 🔑 Environment Variables
-
-Keep secrets out of source control. The backend's `.env` file and the frontend's local `.env` file should not be committed.
+## Environment Configuration
 
 ### Backend
 
-The backend requires a database connection and JWT configuration. The following table describes the settings to configure; use the exact names expected by the current backend settings module.
+Configure the database URL, JWT signing secret, and allowed frontend origins using the exact variable names expected by the backend settings module.
 
-| Setting | Purpose |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `JWT_SECRET` | Secret used to sign authentication tokens |
-| `CORS_ORIGINS` | Allowed frontend origins |
-
-Example values for local development:
+Example local configuration:
 
 ```env
 DATABASE_URL=postgresql+psycopg://USERNAME:PASSWORD@localhost:5432/skillswap_db
@@ -696,219 +464,142 @@ JWT_SECRET=replace_with_a_secure_random_secret
 CORS_ORIGINS=http://localhost:5173,http://localhost:5174
 ```
 
-These are illustrative settings, not production credentials. Confirm the exact variable names and formatting in the backend configuration before use.
+These are illustrative values. Use the actual variable names and expected format defined in the project configuration.
 
-For production:
-
-- Use a strong, unique JWT secret.
-- Use the PostgreSQL connection string supplied by your database provider.
-- Include the deployed frontend origin in the backend's allowed CORS origins.
-- Never commit real passwords, database URLs, or signing secrets.
+Never commit real credentials or signing secrets.
 
 ### Frontend
 
-The frontend uses:
+The frontend uses `VITE_API_URL` to identify the backend API.
+
+Local development:
+
+```env
+VITE_API_URL=http://127.0.0.1:8000/api
+```
+
+Production:
 
 ```env
 VITE_API_URL=https://skillswap-ai-backend-obqv.onrender.com/api
 ```
 
-For local development, use the local API URL shown above.
-
-Variables prefixed with `VITE_` are exposed to the browser bundle. **Never put passwords, private keys, or other secrets in frontend environment variables.**
+Variables prefixed with `VITE_` are included in the client-side application bundle. Do not store secrets in frontend environment variables.
 
 ---
 
-## ☁️ Deployment
+## Testing
 
-SkillSwap AI uses separate services for its frontend, backend, and database.
-
-| Component | Platform | Responsibility |
-|---|---|---|
-| Source code | GitHub | Version control and repository hosting |
-| Frontend | Vercel | Hosts the React application |
-| Backend | Render | Runs the FastAPI service |
-| Database | Neon | Hosts PostgreSQL |
-
-### Deployment workflow
-
-```text
-Developer
-    |
-    v
-GitHub Repository
-    |
-    +----------------------+
-    |                      |
-    v                      v
-Vercel                 Render
-Frontend               FastAPI Backend
-                           |
-                           v
-                       Neon PostgreSQL
-```
-
-With automatic deployment configured, pushing changes to the connected GitHub branch can trigger new deployments.
-
-### Live services
-
-- **Application:** https://skillswap-ai-alpha.vercel.app
-- **Backend health:** https://skillswap-ai-backend-obqv.onrender.com/api/health
-- **API documentation:** https://skillswap-ai-backend-obqv.onrender.com/docs
-
-The backend must be configured to accept requests from the production frontend, and its database connection must point to the intended Neon PostgreSQL database.
-
-On Render's free tier, the service may spin down after inactivity, which can cause a delay on the first request.
-
----
-
-## 🔐 Security and Privacy
-
-Security is implemented across authentication, API access, and data operations.
-
-Key measures include:
-
-- Password hashing rather than storing plaintext passwords.
-- JWT-based authentication for protected endpoints.
-- Server-side identity validation.
-- Resource ownership and conversation-participant checks.
-- Restrictions on unauthorized messaging.
-- Validation of swap-request participation and state transitions.
-- Filtering of test accounts from recommendation results.
-- Environment-based configuration for secrets and database access.
-
-Authentication alone does not grant access to every resource. The backend must also validate that the authenticated user is authorized to perform the requested operation.
-
----
-
-## 🧪 Testing and Quality Assurance
-
-Testing is an important part of the project because recommendation integrity, authentication, and swap-state transitions affect the application's core functionality.
-
-The project includes automated backend tests covering areas such as:
+The project includes automated backend tests for core functionality, including:
 
 - Authentication and account lifecycle.
 - Profile and skill operations.
-- Reciprocal skill similarity.
+- Reciprocal similarity calculations.
 - Collaborative and hybrid recommendation logic.
 - Cold-start behavior.
 - Interaction tracking.
 - Swap creation, acceptance, decline, and completion.
-- Duplicate swap prevention.
+- Duplicate request prevention.
 - Messaging permissions and account isolation.
-- Test-account exclusion and seed-data behavior.
+- Test-account exclusion and demo-data behavior.
 
-The release verification recorded **54 passing backend tests**, alongside a successful frontend production build.
+Run the backend tests from the repository root:
 
-Test results describe the tested project version and test environment; they do not guarantee the absence of every possible production issue.
+```bash
+python -m pytest backend/tests/ -v
+```
 
-### Manual verification
+If using the Windows virtual environment:
 
-Important user flows include:
+```powershell
+.\backend\venv\Scripts\python.exe -m pytest backend/tests/ -v
+```
 
-1. Register and log in with two separate accounts.
-2. Create different profiles and teaching/learning skill lists.
-3. Verify that recommendations reflect reciprocal skill compatibility.
-4. Send a swap request and accept it from the other account.
-5. Confirm that connected students can chat.
-6. Complete the exchange.
-7. Verify that chat history remains available.
-8. Check that unrelated users cannot access another user's private resources.
-9. Verify that profiles and avatars persist across sessions.
+The final release verification recorded **54 passing backend tests** and a successful frontend production build. Test results apply to the tested version and environment and do not guarantee that every possible production scenario has been covered.
 
 ---
 
-## ⚠️ Limitations and Future Improvements
+## Deployment
 
-The project establishes a working hybrid recommendation architecture, but there are several valuable directions for further development.
+The application is deployed using separate services for source control, frontend hosting, backend hosting, and database hosting.
 
-### Recommendation evaluation
+| Component | Platform |
+|---|---|
+| Source code | GitHub |
+| Frontend | Vercel |
+| Backend | Render |
+| Database | Neon PostgreSQL |
 
-- Evaluate the ranking system on a sufficiently representative set of genuine interactions.
-- Compare hybrid weighting configurations using Precision@K, Recall@K, NDCG@K, and Hit Rate@K.
-- Measure how effectively the recommendations support reciprocal exchanges.
-- Investigate how sparse interaction data affects collaborative filtering.
+### Deployment Flow
 
-### Recommendation improvements
+```text
+GitHub
+  |
+  +----> Vercel: React Frontend
+  |
+  +----> Render: FastAPI Backend
+                    |
+                    v
+                Neon PostgreSQL
+```
 
-- Introduce richer skill representations and semantic similarity.
-- Explore learning-to-rank techniques after collecting adequate training data.
-- Consider skill proficiency, availability, learning preferences, and scheduling compatibility.
-- Improve personalization while preserving transparent explanations.
+### Production Links
 
-### Product improvements
+- **Application:** https://skillswap-ai-alpha.vercel.app
+- **Backend:** https://skillswap-ai-backend-obqv.onrender.com
+- **API Documentation:** https://skillswap-ai-backend-obqv.onrender.com/docs
 
-- Add notifications for swap requests and messages.
-- Provide richer progress tracking for completed exchanges.
-- Introduce moderation and reporting features.
-- Expand accessibility and usability testing.
-- Add monitoring, analytics, and performance testing as usage grows.
+With automatic deployment configured, pushing to the connected GitHub branch can trigger a new deployment.
 
-These are potential future improvements, not claims about features already implemented.
+The backend's CORS configuration must allow the deployed frontend origin, and the Render service must use the intended Neon database connection string.
 
----
-
-## 🎓 Learning Outcomes
-
-This project demonstrates the integration of several computer science concepts into a practical application.
-
-**Machine Learning**
-- Content-based recommendation.
-- Collaborative filtering.
-- Cosine similarity.
-- Hybrid scoring.
-- Cold-start handling.
-- Ranking evaluation.
-
-**Full-Stack Development**
-- React component architecture.
-- REST API design.
-- Frontend-backend integration.
-- Authentication state management.
-- Responsive web development.
-
-**Database Engineering**
-- Relational schema design.
-- Foreign keys and integrity constraints.
-- SQLAlchemy ORM.
-- Persistent storage.
-- Transaction-aware operations.
-
-**Software Engineering**
-- Modular code organization.
-- Automated testing.
-- Version control with Git.
-- Deployment workflows.
-- Input validation and access control.
-- Debugging and release verification.
+On Render's free tier, the backend may spin down after inactivity, delaying the first request.
 
 ---
 
-## 🌟 Why SkillSwap AI?
+## Security
 
-SkillSwap AI combines the practical value of peer learning with the technical capabilities of recommendation systems.
+Security measures include:
 
-Its defining idea is **reciprocity**: the best exchange partner is not merely someone who possesses a skill you want, but someone with whom both students have an opportunity to learn from each other.
+- Password hashing rather than plaintext password storage.
+- JWT-based authentication for protected API operations.
+- Server-side identity validation.
+- Ownership and participation checks.
+- Authorization checks for messaging and swap operations.
+- Validation of swap lifecycle transitions.
+- Filtering of test accounts from user-facing recommendations.
+- Environment-based configuration for database credentials and JWT secrets.
 
-By combining skill-based compatibility with behavioral signals, the project provides a foundation for more relevant, explainable, and personalized student connections.
+The backend remains responsible for authorization decisions; the frontend does not serve as the security boundary.
 
 ---
 
-## 👨‍💻 Author
+## Limitations and Future Improvements
+
+Potential future work includes:
+
+- Evaluating recommendation quality on a larger set of genuine interactions.
+- Comparing hybrid weights using ranking metrics.
+- Improving cold-start performance when behavioral data is sparse.
+- Exploring semantic skill similarity and learning-to-rank approaches.
+- Considering proficiency, availability, and scheduling compatibility.
+- Adding notifications, reporting, and moderation tools.
+- Expanding accessibility and performance testing.
+
+These are possible extensions, not claims about currently implemented functionality.
+
+---
+
+## Author
 
 **Shrey Darshan**
 
 - GitHub: [@shreydarshan](https://github.com/shreydarshan)
-- Project Repository: [SkillSwap AI](https://github.com/shreydarshan/skillswap-ai)
-- Live Application: [skillswap-ai-alpha.vercel.app](https://skillswap-ai-alpha.vercel.app)
+- Repository: [SkillSwap AI](https://github.com/shreydarshan/skillswap-ai)
+- Live Application: [SkillSwap AI](https://skillswap-ai-alpha.vercel.app)
 
 ---
 
-## 📄 License
+## License
 
-No license has been specified for this repository in this README. If you intend to make the project open source, add an appropriate license file and update this section.
-
----
-
-**Built to make learning collaborative, reciprocal, and accessible.** 🚀
-
+A license has not been specified here. Add a license file and update this section if you intend to distribute the project under an open-source license.
