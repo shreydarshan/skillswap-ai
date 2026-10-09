@@ -592,7 +592,7 @@ These are possible extensions, not claims about currently implemented functional
 
 ## Author
 
-**Shrey Darshan**
+**Shrey Darshan**-
 **Raghuraj Singh Chauhan** 
 
 - GitHub: [@shreydarshan](https://github.com/shreydarshan)
