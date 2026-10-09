@@ -593,6 +593,7 @@ These are possible extensions, not claims about currently implemented functional
 ## Author
 
 **Shrey Darshan**
+**Raghuraj Singh Chauhan** 
 
 - GitHub: [@shreydarshan](https://github.com/shreydarshan)
 - Repository: [SkillSwap AI](https://github.com/shreydarshan/skillswap-ai)
@@ -600,6 +601,4 @@ These are possible extensions, not claims about currently implemented functional
 
 ---
 
-## License
 
-A license has not been specified here. Add a license file and update this section if you intend to distribute the project under an open-source license.
